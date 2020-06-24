@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.sqlite
+*.po
+*.pot
+*.log
+*.rdb
+!data/logs
+!data/redis
+app/config.py
+.idea/*
+env/*
+venv/*
+*.csv
+*.xlsx
