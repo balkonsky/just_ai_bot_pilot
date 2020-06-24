@@ -92,7 +92,7 @@ def cross_validation(test_sample_split, df, test_iteration):
     if test_iteration < 1:
         raise RuntimeError('iteration for test must be more or equals 1')
     accuracys = []
-    for inter in range(test_iteration):
+    for iter in range(test_iteration):
         df = shuffle(df)
         kf = KFold(n_splits=test_sample_split, shuffle=True, random_state=2)
         result = next(kf.split(df), None)
@@ -102,10 +102,12 @@ def cross_validation(test_sample_split, df, test_iteration):
             save_df_to_csv(training_df, 'cv_training.csv')
             save_df_to_csv(test_df, 'cv_test.csv')
             model_id = train_model(get_prepare_csv_file('cv_training.csv'))
-            accuracys.append(count_accuracy(test_model(get_prepare_csv_file('cv_test.csv'), model_id)))
+            res_test_df = test_model(get_prepare_csv_file('cv_test.csv'), model_id)
+            save_df_to_csv(res_test_df, 'result_test_inter_{}.csv'.format(iter))
+            accuracys.append(count_accuracy(res_test_df))
         except RuntimeError as e:
             log.error('except error with cross validation: {}'.format(e))
-    print(np.mean(accuracys))
+    log.info('mean accuracy: {}'.format(np.mean(accuracys)))
 
 
 def main():
