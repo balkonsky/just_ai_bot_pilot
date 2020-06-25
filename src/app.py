@@ -19,7 +19,7 @@ def prepare_data_frame(excel_filename):
     for i, row in df.iterrows():
         if not pd.isna(df.at[i, 'utterance']):
             df.at[i, 'utterance'] = '"' + df['utterance'].values[i] + '"'
-    return df
+    return df.dropna()
 
 
 def save_df_to_csv(df, csv_train_filename):
@@ -36,9 +36,10 @@ def count_accuracy(test_result_df):
     return acc
 
 
-def print_confusion_matrix(true, predict):
-    df_confusion = pd.crosstab(pd.Series(true, name='True'),
-                               pd.Series(predict, name='Predict'))
+def print_confusion_matrix(test_result_df):
+
+    df_confusion = pd.crosstab(pd.Series(test_result_df['true_intent'].tolist(), name='True'),
+                               pd.Series(test_result_df['first_predict_intent'].tolist(), name='Predict'))
     plt.matshow(df_confusion, cmap=plt.cm.gray_r)
     plt.colorbar()
     tick_marks = np.arange(len(df_confusion.columns))
